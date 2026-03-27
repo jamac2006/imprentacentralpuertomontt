@@ -423,148 +423,163 @@
                 <h3 class="text-2xl font-bold text-gray-800 mb-8 text-center">Catálogo de Talonarios</h3>
                 
                 <!-- 1/4 Carta -->
-                <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-8">
-                    <div class="gradient-formularios text-white px-6 py-4"><h4 class="text-xl font-bold">📐 Tamaño 1/4 Carta (10x14 cm)</h4></div>
-                    <div class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <div class="border-2 border-gray-100 rounded-xl p-4 card-hover cursor-pointer hover:border-purple-400" onclick="selectFormulario('1/4 Carta - Original', '100 hojas solo Original Blanca', 6990)">
-                            <div class="flex justify-between items-start mb-2"><span class="font-bold text-gray-800">Original</span><span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">$6.990</span></div>
-                            <p class="text-gray-600 text-sm">100 hojas solo Original Blanca</p>
-                            <button class="mt-3 w-full bg-purple-100 text-purple-700 font-semibold py-1.5 rounded-lg text-sm">Seleccionar</button>
-                        </div>
-                        <div class="border-2 border-gray-100 rounded-xl p-4 card-hover cursor-pointer hover:border-purple-400" onclick="selectFormulario('1/4 Carta - Duplicado', '100 Hojas (50 Original + 50 Copia)', 7990)">
-                            <div class="flex justify-between items-start mb-2"><span class="font-bold text-gray-800">Duplicado</span><span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">$7.990</span></div>
-                            <p class="text-gray-600 text-sm">100 Hojas (50 Original + 50 Copia)</p>
-                            <button class="mt-3 w-full bg-purple-100 text-purple-700 font-semibold py-1.5 rounded-lg text-sm">Seleccionar</button>
-                        </div>
-                        <div class="border-2 border-gray-100 rounded-xl p-4 card-hover cursor-pointer hover:border-purple-400" onclick="selectFormulario('1/4 Carta - Duplicado', '200 Hojas (100 Original + 100 Copias)', 12990)">
-                            <div class="flex justify-between items-start mb-2"><span class="font-bold text-gray-800">Duplicado</span><span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">$12.990</span></div>
-                            <p class="text-gray-600 text-sm">200 Hojas (100 Original + 100 Copias)</p>
-                            <button class="mt-3 w-full bg-purple-100 text-purple-700 font-semibold py-1.5 rounded-lg text-sm">Seleccionar</button>
-                        </div>
-                        <div class="border-2 border-gray-100 rounded-xl p-4 card-hover cursor-pointer hover:border-purple-400" onclick="selectFormulario('1/4 Carta - Triplicado', '150 hojas (50+50+50)', 14990)">
-                            <div class="flex justify-between items-start mb-2"><span class="font-bold text-gray-800">Triplicado</span><span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">$14.990</span></div>
-                            <p class="text-gray-600 text-sm">150 hojas (50+50+50)</p>
-                            <button class="mt-3 w-full bg-purple-100 text-purple-700 font-semibold py-1.5 rounded-lg text-sm">Seleccionar</button>
-                        </div>
-                        <div class="border-2 border-gray-100 rounded-xl p-4 card-hover cursor-pointer hover:border-purple-400" onclick="selectFormulario('1/4 Carta - Triplicado', '300 hojas (100+100+100)', 18990)">
-                            <div class="flex justify-between items-start mb-2"><span class="font-bold text-gray-800">Triplicado</span><span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">$18.990</span></div>
-                            <p class="text-gray-600 text-sm">300 hojas (100+100+100)</p>
-                            <button class="mt-3 w-full bg-purple-100 text-purple-700 font-semibold py-1.5 rounded-lg text-sm">Seleccionar</button>
-                        </div>
-                    </div>
-                </div>
+<div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-8">
+    <div class="gradient-formularios text-white px-6 py-4">
+        <h4 class="text-xl font-bold">📐 Tamaño 1/4 Carta (10x14 cm)</h4>
+    </div>
+    <div class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        
+        <!-- Producto 1 -->
+        <div class="border-2 border-gray-100 rounded-xl p-4 card-hover cursor-pointer hover:border-purple-400" onclick="selectFormulario('1/4 Carta - Original', '100 hojas solo Original Blanca', 6990)">
+            <div class="mb-3 h-40 overflow-hidden rounded-lg bg-gray-100 flex items-center justify-center">
+                <img src="https://raw.githubusercontent.com/jamac2006/formularios/refs/heads/main/14%20carta.jpg" alt="1/4 Carta" class="h-full object-contain hover:scale-110 transition-transform duration-300">
+            </div>
+            <div class="flex justify-between items-start mb-2">
+                <span class="font-bold text-gray-800">Original</span>
+                <span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">$6.990</span>
+            </div>
+            <p class="text-gray-600 text-sm">100 hojas solo Original Blanca</p>
+            <button class="mt-3 w-full bg-purple-100 text-purple-700 font-semibold py-1.5 rounded-lg text-sm">Seleccionar</button>
+        </div>
 
-                <!-- 1/2 Carta -->
-                <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-8">
-                    <div class="gradient-formularios text-white px-6 py-4"><h4 class="text-xl font-bold">📐 Tamaño 1/2 Carta (14x20 cm)</h4></div>
-                    <div class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <div class="border-2 border-gray-100 rounded-xl p-4 card-hover cursor-pointer hover:border-purple-400" onclick="selectFormulario('1/2 Carta - Original', '100 hojas solo Original Blanca', 12990)">
-                            <div class="flex justify-between items-start mb-2"><span class="font-bold text-gray-800">Original</span><span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">$12.990</span></div>
-                            <p class="text-gray-600 text-sm">100 hojas solo Original Blanca</p>
-                            <button class="mt-3 w-full bg-purple-100 text-purple-700 font-semibold py-1.5 rounded-lg text-sm">Seleccionar</button>
-                        </div>
-                        <div class="border-2 border-gray-100 rounded-xl p-4 card-hover cursor-pointer hover:border-purple-400" onclick="selectFormulario('1/2 Carta - Duplicado', '100 Hojas (50 Original + 50 Copia)', 14990)">
-                            <div class="flex justify-between items-start mb-2"><span class="font-bold text-gray-800">Duplicado</span><span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">$14.990</span></div>
-                            <p class="text-gray-600 text-sm">100 Hojas (50 Original + 50 Copia)</p>
-                            <button class="mt-3 w-full bg-purple-100 text-purple-700 font-semibold py-1.5 rounded-lg text-sm">Seleccionar</button>
-                        </div>
-                        <div class="border-2 border-gray-100 rounded-xl p-4 card-hover cursor-pointer hover:border-purple-400" onclick="selectFormulario('1/2 Carta - Duplicado', '200 Hojas (100 Original + 100 Copias)', 18990)">
-                            <div class="flex justify-between items-start mb-2"><span class="font-bold text-gray-800">Duplicado</span><span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">$18.990</span></div>
-                            <p class="text-gray-600 text-sm">200 Hojas (100 Original + 100 Copias)</p>
-                            <button class="mt-3 w-full bg-purple-100 text-purple-700 font-semibold py-1.5 rounded-lg text-sm">Seleccionar</button>
-                        </div>
-                        <div class="border-2 border-gray-100 rounded-xl p-4 card-hover cursor-pointer hover:border-purple-400" onclick="selectFormulario('1/2 Carta - Triplicado', '150 hojas (50+50+50)', 24990)">
-                            <div class="flex justify-between items-start mb-2"><span class="font-bold text-gray-800">Triplicado</span><span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">$24.990</span></div>
-                            <p class="text-gray-600 text-sm">150 hojas (50+50+50)</p>
-                            <button class="mt-3 w-full bg-purple-100 text-purple-700 font-semibold py-1.5 rounded-lg text-sm">Seleccionar</button>
-                        </div>
-                        <div class="border-2 border-gray-100 rounded-xl p-4 card-hover cursor-pointer hover:border-purple-400" onclick="selectFormulario('1/2 Carta - Triplicado', '300 hojas (100+100+100)', 29990)">
-                            <div class="flex justify-between items-start mb-2"><span class="font-bold text-gray-800">Triplicado</span><span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">$29.990</span></div>
-                            <p class="text-gray-600 text-sm">300 hojas (100+100+100)</p>
-                            <button class="mt-3 w-full bg-purple-100 text-purple-700 font-semibold py-1.5 rounded-lg text-sm">Seleccionar</button>
-                        </div>
-                    </div>
-                </div>
+        <!-- Producto 2 -->
+        <div class="border-2 border-gray-100 rounded-xl p-4 card-hover cursor-pointer hover:border-purple-400" onclick="selectFormulario('1/4 Carta - Duplicado', '100 Hojas (50 Original + 50 Copia)', 7990)">
+            <div class="mb-3 h-40 overflow-hidden rounded-lg bg-gray-100 flex items-center justify-center">
+                <img src="https://raw.githubusercontent.com/jamac2006/formularios/refs/heads/main/14%20carta.jpg" alt="1/4 Carta" class="h-full object-contain hover:scale-110 transition-transform duration-300">
+            </div>
+            <div class="flex justify-between items-start mb-2">
+                <span class="font-bold text-gray-800">Duplicado</span>
+                <span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">$7.990</span>
+            </div>
+            <p class="text-gray-600 text-sm">100 Hojas (50 Original + 50 Copia)</p>
+            <button class="mt-3 w-full bg-purple-100 text-purple-700 font-semibold py-1.5 rounded-lg text-sm">Seleccionar</button>
+        </div>
 
-                <!-- Carta -->
-                <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-8">
-                    <div class="gradient-formularios text-white px-6 py-4"><h4 class="text-xl font-bold">📐 Tamaño Carta (21x27 cm)</h4></div>
-                    <div class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <div class="border-2 border-gray-100 rounded-xl p-4 card-hover cursor-pointer hover:border-purple-400" onclick="selectFormulario('Carta - Original', '100 hojas solo Original Blanca', 12990)">
-                            <div class="flex justify-between items-start mb-2"><span class="font-bold text-gray-800">Original</span><span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">$12.990</span></div>
-                            <p class="text-gray-600 text-sm">100 hojas solo Original Blanca</p>
-                            <button class="mt-3 w-full bg-purple-100 text-purple-700 font-semibold py-1.5 rounded-lg text-sm">Seleccionar</button>
-                        </div>
-                        <div class="border-2 border-gray-100 rounded-xl p-4 card-hover cursor-pointer hover:border-purple-400" onclick="selectFormulario('Carta - Duplicado', '100 Hojas (50 Original + 50 Copia)', 18990)">
-                            <div class="flex justify-between items-start mb-2"><span class="font-bold text-gray-800">Duplicado</span><span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">$18.990</span></div>
-                            <p class="text-gray-600 text-sm">100 Hojas (50 Original + 50 Copia)</p>
-                            <button class="mt-3 w-full bg-purple-100 text-purple-700 font-semibold py-1.5 rounded-lg text-sm">Seleccionar</button>
-                        </div>
-                        <div class="border-2 border-gray-100 rounded-xl p-4 card-hover cursor-pointer hover:border-purple-400" onclick="selectFormulario('Carta - Duplicado', '200 Hojas (100 Original + 100 Copias)', 24990)">
-                            <div class="flex justify-between items-start mb-2"><span class="font-bold text-gray-800">Duplicado</span><span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">$24.990</span></div>
-                            <p class="text-gray-600 text-sm">200 Hojas (100 Original + 100 Copias)</p>
-                            <button class="mt-3 w-full bg-purple-100 text-purple-700 font-semibold py-1.5 rounded-lg text-sm">Seleccionar</button>
-                        </div>
-                        <div class="border-2 border-gray-100 rounded-xl p-4 card-hover cursor-pointer hover:border-purple-400" onclick="selectFormulario('Carta - Triplicado', '150 hojas (50+50+50)', 28990)">
-                            <div class="flex justify-between items-start mb-2"><span class="font-bold text-gray-800">Triplicado</span><span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">$28.990</span></div>
-                            <p class="text-gray-600 text-sm">150 hojas (50+50+50)</p>
-                            <button class="mt-3 w-full bg-purple-100 text-purple-700 font-semibold py-1.5 rounded-lg text-sm">Seleccionar</button>
-                        </div>
-                        <div class="border-2 border-gray-100 rounded-xl p-4 card-hover cursor-pointer hover:border-purple-400" onclick="selectFormulario('Carta - Triplicado', '300 hojas (100+100+100)', 32990)">
-                            <div class="flex justify-between items-start mb-2"><span class="font-bold text-gray-800">Triplicado</span><span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">$32.990</span></div>
-                            <p class="text-gray-600 text-sm">300 hojas (100+100+100)</p>
-                            <button class="mt-3 w-full bg-purple-100 text-purple-700 font-semibold py-1.5 rounded-lg text-sm">Seleccionar</button>
-                        </div>
-                    </div>
-                </div>
+        <!-- Producto 3 -->
+        <div class="border-2 border-gray-100 rounded-xl p-4 card-hover cursor-pointer hover:border-purple-400" onclick="selectFormulario('1/4 Carta - Duplicado', '200 Hojas (100 Original + 100 Copias)', 12990)">
+            <div class="mb-3 h-40 overflow-hidden rounded-lg bg-gray-100 flex items-center justify-center">
+                <img src="https://raw.githubusercontent.com/jamac2006/formularios/refs/heads/main/14%20carta.jpg" alt="1/4 Carta" class="h-full object-contain hover:scale-110 transition-transform duration-300">
+            </div>
+            <div class="flex justify-between items-start mb-2">
+                <span class="font-bold text-gray-800">Duplicado</span>
+                <span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">$12.990</span>
+            </div>
+            <p class="text-gray-600 text-sm">200 Hojas (100 Original + 100 Copias)</p>
+            <button class="mt-3 w-full bg-purple-100 text-purple-700 font-semibold py-1.5 rounded-lg text-sm">Seleccionar</button>
+        </div>
 
-                <!-- Oficio -->
-                <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-8">
-                    <div class="gradient-formularios text-white px-6 py-4"><h4 class="text-xl font-bold">📐 Tamaño Oficio (21x32 cm)</h4></div>
-                    <div class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <div class="border-2 border-gray-100 rounded-xl p-4 card-hover cursor-pointer hover:border-purple-400" onclick="selectFormulario('Oficio - Original', '100 hojas solo Original Blanca', 13990)">
-                            <div class="flex justify-between items-start mb-2"><span class="font-bold text-gray-800">Original</span><span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">$13.990</span></div>
-                            <p class="text-gray-600 text-sm">100 hojas solo Original Blanca</p>
-                            <button class="mt-3 w-full bg-purple-100 text-purple-700 font-semibold py-1.5 rounded-lg text-sm">Seleccionar</button>
-                        </div>
-                        <div class="border-2 border-gray-100 rounded-xl p-4 card-hover cursor-pointer hover:border-purple-400" onclick="selectFormulario('Oficio - Duplicado', '100 Hojas (50 Original + 50 Copia)', 19990)">
-                            <div class="flex justify-between items-start mb-2"><span class="font-bold text-gray-800">Duplicado</span><span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">$19.990</span></div>
-                            <p class="text-gray-600 text-sm">100 Hojas (50 Original + 50 Copia)</p>
-                            <button class="mt-3 w-full bg-purple-100 text-purple-700 font-semibold py-1.5 rounded-lg text-sm">Seleccionar</button>
-                        </div>
-                        <div class="border-2 border-gray-100 rounded-xl p-4 card-hover cursor-pointer hover:border-purple-400" onclick="selectFormulario('Oficio - Duplicado', '200 Hojas (100 Original + 100 Copias)', 26990)">
-                            <div class="flex justify-between items-start mb-2"><span class="font-bold text-gray-800">Duplicado</span><span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">$26.990</span></div>
-                            <p class="text-gray-600 text-sm">200 Hojas (100 Original + 100 Copias)</p>
-                            <button class="mt-3 w-full bg-purple-100 text-purple-700 font-semibold py-1.5 rounded-lg text-sm">Seleccionar</button>
-                        </div>
-                        <div class="border-2 border-gray-100 rounded-xl p-4 card-hover cursor-pointer hover:border-purple-400" onclick="selectFormulario('Oficio - Triplicado', '150 hojas (50+50+50)', 29990)">
-                            <div class="flex justify-between items-start mb-2"><span class="font-bold text-gray-800">Triplicado</span><span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">$29.990</span></div>
-                            <p class="text-gray-600 text-sm">150 hojas (50+50+50)</p>
-                            <button class="mt-3 w-full bg-purple-100 text-purple-700 font-semibold py-1.5 rounded-lg text-sm">Seleccionar</button>
-                        </div>
-                        <div class="border-2 border-gray-100 rounded-xl p-4 card-hover cursor-pointer hover:border-purple-400" onclick="selectFormulario('Oficio - Triplicado', '300 hojas (100+100+100)', 34990)">
-                            <div class="flex justify-between items-start mb-2"><span class="font-bold text-gray-800">Triplicado</span><span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">$34.990</span></div>
-                            <p class="text-gray-600 text-sm">300 hojas (100+100+100)</p>
-                            <button class="mt-3 w-full bg-purple-100 text-purple-700 font-semibold py-1.5 rounded-lg text-sm">Seleccionar</button>
-                        </div>
-                    </div>
-                </div>
+        <!-- Producto 4 -->
+        <div class="border-2 border-gray-100 rounded-xl p-4 card-hover cursor-pointer hover:border-purple-400" onclick="selectFormulario('1/4 Carta - Triplicado', '150 hojas (50+50+50)', 14990)">
+            <div class="mb-3 h-40 overflow-hidden rounded-lg bg-gray-100 flex items-center justify-center">
+                <img src="https://raw.githubusercontent.com/jamac2006/formularios/refs/heads/main/14%20carta.jpg" alt="1/4 Carta" class="h-full object-contain hover:scale-110 transition-transform duration-300">
+            </div>
+            <div class="flex justify-between items-start mb-2">
+                <span class="font-bold text-gray-800">Triplicado</span>
+                <span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">$14.990</span>
+            </div>
+            <p class="text-gray-600 text-sm">150 hojas (50+50+50)</p>
+            <button class="mt-3 w-full bg-purple-100 text-purple-700 font-semibold py-1.5 rounded-lg text-sm">Seleccionar</button>
+        </div>
 
-                <!-- Receta Médica -->
-                <div class="bg-gradient-to-r from-red-500 to-pink-600 rounded-2xl shadow-lg overflow-hidden text-white mb-8">
-                    <div class="px-6 py-4 flex items-center gap-3"><span class="text-3xl">🩺</span><h4 class="text-xl font-bold">TALONARIO RECETA MÉDICA</h4></div>
-                    <div class="p-6 bg-white/10">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div class="border-2 border-white/30 rounded-xl p-4 card-hover cursor-pointer hover:border-white" onclick="selectFormulario('Receta Médica', '100 hojas - Formato estándar', 9990)">
-                                <div class="flex justify-between items-start mb-2"><span class="font-bold">Receta Médica Estándar</span><span class="bg-white text-red-600 text-sm font-bold px-3 py-1 rounded-full">$9.990</span></div>
-                                <p class="text-white/90 text-sm">100 hojas - Formato profesional</p>
-                                <button class="mt-3 w-full bg-white text-red-600 font-semibold py-1.5 rounded-lg text-sm">Seleccionar</button>
-                            </div>
-                        </div>
-                    </div>
+        <!-- Producto 5 -->
+        <div class="border-2 border-gray-100 rounded-xl p-4 card-hover cursor-pointer hover:border-purple-400" onclick="selectFormulario('1/4 Carta - Triplicado', '300 hojas (100+100+100)', 18990)">
+            <div class="mb-3 h-40 overflow-hidden rounded-lg bg-gray-100 flex items-center justify-center">
+                <img src="https://raw.githubusercontent.com/jamac2006/formularios/refs/heads/main/14%20carta.jpg" alt="1/4 Carta" class="h-full object-contain hover:scale-110 transition-transform duration-300">
+            </div>
+            <div class="flex justify-between items-start mb-2">
+                <span class="font-bold text-gray-800">Triplicado</span>
+                <span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">$18.990</span>
+            </div>
+            <p class="text-gray-600 text-sm">300 hojas (100+100+100)</p>
+            <button class="mt-3 w-full bg-purple-100 text-purple-700 font-semibold py-1.5 rounded-lg text-sm">Seleccionar</button>
+        </div>
+
+    </div>
+</div>
+
+<!-- 1/2 Carta -->
+<div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-8">
+    <div class="gradient-formularios text-white px-6 py-4">
+        <h4 class="text-xl font-bold">📐 Tamaño 1/2 Carta (14x20 cm)</h4>
+    </div>
+    <div class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        
+        <!-- Producto 1 -->
+        <div class="border-2 border-gray-100 rounded-xl p-4 card-hover cursor-pointer hover:border-purple-400" onclick="selectFormulario('1/2 Carta - Original', '100 hojas solo Original Blanca', 12990)">
+            <div class="mb-3 h-40 overflow-hidden rounded-lg bg-gray-100 flex items-center justify-center">
+                <img src="https://raw.githubusercontent.com/jamac2006/formularios/refs/heads/main/12%20carta.jpg" alt="1/2 Carta" class="h-full object-contain hover:scale-110 transition-transform duration-300">
+            </div>
+            <div class="flex justify-between items-start mb-2">
+                <span class="font-bold text-gray-800">Original</span>
+                <span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">$12.990</span>
+            </div>
+            <p class="text-gray-600 text-sm">100 hojas solo Original Blanca</p>
+            <button class="mt-3 w-full bg-purple-100 text-purple-700 font-semibold py-1.5 rounded-lg text-sm">Seleccionar</button>
+        </div>
+
+        <!-- Repetir estructura para los demás productos de 1/2 Carta... -->
+
+    </div>
+</div>
+
+<!-- Carta -->
+<div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-8">
+    <div class="gradient-formularios text-white px-6 py-4">
+        <h4 class="text-xl font-bold">📐 Tamaño Carta (21x27 cm)</h4>
+    </div>
+    <div class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        
+        <!-- Producto 1 -->
+        <div class="border-2 border-gray-100 rounded-xl p-4 card-hover cursor-pointer hover:border-purple-400" onclick="selectFormulario('Carta - Original', '100 hojas solo Original Blanca', 12990)">
+            <div class="mb-3 h-40 overflow-hidden rounded-lg bg-gray-100 flex items-center justify-center">
+                <img src="https://raw.githubusercontent.com/jamac2006/formularios/refs/heads/main/carta.jpg" alt="Carta" class="h-full object-contain hover:scale-110 transition-transform duration-300">
+            </div>
+            <!-- ... resto del contenido ... -->
+        </div>
+
+    </div>
+</div>
+
+<!-- Oficio -->
+<div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-8">
+    <div class="gradient-formularios text-white px-6 py-4">
+        <h4 class="text-xl font-bold">📐 Tamaño Oficio (21x32 cm)</h4>
+    </div>
+    <div class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        
+        <!-- Producto 1 -->
+        <div class="border-2 border-gray-100 rounded-xl p-4 card-hover cursor-pointer hover:border-purple-400" onclick="selectFormulario('Oficio - Original', '100 hojas solo Original Blanca', 13990)">
+            <div class="mb-3 h-40 overflow-hidden rounded-lg bg-gray-100 flex items-center justify-center">
+                <img src="https://raw.githubusercontent.com/jamac2006/formularios/refs/heads/main/oficio.jpg" alt="Oficio" class="h-full object-contain hover:scale-110 transition-transform duration-300">
+            </div>
+            <!-- ... resto del contenido ... -->
+        </div>
+
+    </div>
+</div>
+
+<!-- Receta Médica -->
+<div class="bg-gradient-to-r from-red-500 to-pink-600 rounded-2xl shadow-lg overflow-hidden text-white mb-8">
+    <div class="px-6 py-4 flex items-center gap-3">
+        <span class="text-3xl">🩺</span>
+        <h4 class="text-xl font-bold">TALONARIO RECETA MÉDICA</h4>
+    </div>
+    <div class="p-6 bg-white/10">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="border-2 border-white/30 rounded-xl p-4 card-hover cursor-pointer hover:border-white" onclick="selectFormulario('Receta Médica', '100 hojas - Formato estándar', 9990)">
+                <div class="mb-3 h-48 overflow-hidden rounded-lg bg-white flex items-center justify-center">
+                    <img src="https://raw.githubusercontent.com/jamac2006/formularios/refs/heads/main/1%20receta%20medica.webp" alt="Receta Médica" class="h-full object-contain hover:scale-110 transition-transform duration-300">
                 </div>
+                <div class="flex justify-between items-start mb-2">
+                    <span class="font-bold">Receta Médica Estándar</span>
+                    <span class="bg-white text-red-600 text-sm font-bold px-3 py-1 rounded-full">$9.990</span>
+                </div>
+                <p class="text-white/90 text-sm">100 hojas - Formato profesional</p>
+                <button class="mt-3 w-full bg-white text-red-600 font-semibold py-1.5 rounded-lg text-sm">Seleccionar</button>
             </div>
         </div>
+    </div>
+</div>
 
         <!-- Formularios Order Form -->
         <div id="formularios-order" class="py-16 bg-white hidden">
