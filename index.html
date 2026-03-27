@@ -905,6 +905,21 @@
 
         document.getElementById('formQty')?.addEventListener('input', calculateFormPrice);
 
+        /* Upload zone styles */
+.upload-zone.dragover {
+    border-color: #3b82f6;
+    background: rgba(59, 130, 246, 0.1);
+}
+
+.file-item {
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
         // ==================== RECETAS FUNCTIONS ====================
         let recetaCurrentTemplate = null;
         let recetaSelectedElement = null;
