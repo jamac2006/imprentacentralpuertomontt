@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Librería Central - Puerto Montt | Timbres, Formularios y Recetas Médicas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/interact.js/1.10.17/interact.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Roboto', sans-serif; }
+        .gradient-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%); }
+        .gradient-timbres { background: linear-gradient(135deg, #f59e0b 0%, #ef4444 50%, #8b5cf6 100%); }
+        .gradient-formularios { background: linear-gradient(135deg, #10b981 0%, #3b82f6 50%, #8b5cf6 100%); }
+        .gradient-recetas { background: linear-gradient(135deg, #ec4899 0%, #f43f5e 50%, #8b5cf6 100%); }
+        
+        .nav-link { transition: all 0.3s; position: relative; }
+        .nav-link:hover { transform: translateY(-3px); }
+        .nav-link.active { background: rgba(255,255,255,0.3); }
+        
+        .service-card { transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .service-card:hover { transform: translateY(-12px) scale(1.02); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); }
+        
+        .btn-glow { position: relative; overflow: hidden; }
+        .btn-glow::after {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+            transform: scale(0); transition: transform 0.5s ease;
+        }
+        .btn-glow:hover::after { transform: scale(1); }
+        
+        .floating { animation: float 3s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        
+        .whatsapp-float {
+            position: fixed; bottom: 25px; right: 25px; z-index: 100;
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-15px); } 60% { transform: translateY(-10px); }
+        }
+        
+        .section-view { display: none; }
+        .section-view.active { display: block; animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .draggable-element {
+            position: absolute; cursor: move; cursor: -webkit-grab; cursor: grab;
+            border: 2px dashed transparent; transition: border-color 0.2s;
+            padding: 8px; min-width: 50px; min-height: 30px;
+        }
+        .draggable-element:hover { border-color: #3b82f6; background: rgba(59, 130, 246, 0.1); }
+        .draggable-element.selected {
+            border-color: #8b5cf6; background: rgba(139, 92, 246, 0.15);
+            cursor: -webkit-grabbing; cursor: grabbing;
+        }
+        .resize-handle {
+            position: absolute; width: 10px; height: 10px;
+            background: #8b5cf6; border: 2px solid white; border-radius: 50%;
+            display: none; z-index: 10;
+        }
+        .draggable-element.selected .resize-handle { display: block; }
+        .resize-handle.se { bottom: -5px; right: -5px; cursor: se-resize; }
+        .resize-handle.sw { bottom: -5px; left: -5px; cursor: sw-resize; }
+        .resize-handle.ne { top: -5px; right: -5px; cursor: ne-resize; }
+        .resize-handle.nw { top: -5px; left: -5px; cursor: nw-resize; }
+        
+        .uploaded-logo { max-width: 150px; max-height: 150px; object-fit: contain; }
+        .color-picker::-webkit-color-swatch-wrapper { padding: 0; }
+        .color-picker::-webkit-color-swatch { border: none; border-radius: 6px; }
+        
+        .upload-zone { border: 3px dashed #cbd5e1; transition: all 0.3s; }
+        .upload-zone:hover, .upload-zone.dragover { border-color: #3b82f6; background: rgba(59, 130, 246, 0.05); }
+        
+        .loading {
+            display: inline-block; width: 20px; height: 20px;
+            border: 3px solid rgba(255,255,255,.3); border-radius: 50%;
+            border-top-color: white; animation: spin 1s ease-in-out infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        .title-suggestions { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+        .title-suggestion {
+            background: white; border: 2px solid #e5e7eb; padding: 4px 10px;
+            border-radius: 20px; font-size: 11px; cursor: pointer; transition: all 0.2s;
+        }
+        .title-suggestion:hover { background: #667eea; color: white; border-color: #667eea; }
+        
+        input[type=range] {
+            -webkit-appearance: none; width: 100%; background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none; height: 16px; width: 16px;
+            border-radius: 50%; background: #3b82f6; cursor: pointer; margin-top: -6px;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%; height: 4px; cursor: pointer;
+            background: #e5e7eb; border-radius: 2px;
+        }
+        
+        .preview-canvas {
+            background-image: 
+                linear-gradient(45deg, #e5e7eb 25%, transparent 25%),
+                linear-gradient(-45deg, #e5e7eb 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, #e5e7eb 75%),
+                linear-gradient(-45deg, transparent 75%, #e5e7eb 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+        }
+        
+        .template-card { transition: all 0.3s ease; }
+        .template-card:hover { transform: translateY(-8px); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); }
+        
+        .editor-panel { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); }
+        .property-panel { background: white; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        
+        #exportCanvas { position: fixed; top: -9999px; left: -9999px; z-index: -1; }
+        
+        .mobile-menu { display: none; }
+        @media (max-width: 768px) {
+            .mobile-menu { display: block; }
+            .desktop-menu { display: none; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <!-- Floating WhatsApp Button -->
+    <a href="https://wa.me/56978472489" target="_blank" class="whatsapp-float bg-green-500 hover:bg-green-600 text-white w-16 h-16 rounded-full flex items-center justify-center shadow-2xl btn-glow">
+        <i class="fab fa-whatsapp text-3xl"></i>
+    </a>
+
+    <!-- Navigation Bar -->
+    <nav class="gradient-primary text-white shadow-2xl sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <!-- Logo -->
+                <div class="flex items-center gap-3 mb-4 md:mb-0 cursor-pointer" onclick="navigateTo('home')">
+                    <span class="text-4xl">🏥</span>
+                    <div>
+                        <h1 class="text-2xl font-black">Librería Central</h1>
+                        <p class="text-xs opacity-90">Puerto Montt</p>
+                    </div>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="desktop-menu flex flex-wrap justify-center gap-2">
+                    <button onclick="navigateTo('home')" class="nav-link active px-4 py-2 rounded-lg hover:bg-white/20 font-medium" id="nav-home">
+                        <i class="fas fa-home mr-1"></i> Inicio
+                    </button>
+                    <button onclick="navigateTo('timbres')" class="nav-link px-4 py-2 rounded-lg hover:bg-white/20 font-medium" id="nav-timbres">
+                        <i class="fas fa-stamp mr-1"></i> Timbres
+                    </button>
+                    <button onclick="navigateTo('formularios')" class="nav-link px-4 py-2 rounded-lg hover:bg-white/20 font-medium" id="nav-formularios">
+                        <i class="fas fa-file-alt mr-1"></i> Formularios
+                    </button>
+                    <button onclick="navigateTo('recetas')" class="nav-link px-4 py-2 rounded-lg hover:bg-white/20 font-medium" id="nav-recetas">
+                        <i class="fas fa-prescription mr-1"></i> Recetas
+                    </button>
+                    <button onclick="navigateTo('contacto')" class="nav-link px-4 py-2 rounded-lg hover:bg-white/20 font-medium" id="nav-contacto">
+                        <i class="fas fa-envelope mr-1"></i> Contacto
+                    </button>
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <button class="mobile-menu text-white" onclick="toggleMobileMenu()">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+                
+                <!-- WhatsApp Button -->
+                <a href="https://wa.me/56978472489" target="_blank" class="hidden md:flex bg-green-500 hover:bg-green-600 text-white px-5 py-2 rounded-full font-bold items-center gap-2 transition btn-glow">
+                    <i class="fab fa-whatsapp"></i> WhatsApp
+                </a>
+            </div>
+            
+            <!-- Mobile Menu -->
+            <div id="mobileMenu" class="mobile-menu hidden mt-4 pb-4">
+                <div class="flex flex-col gap-2">
+                    <button onclick="navigateTo('home'); toggleMobileMenu()" class="nav-link active px-4 py-3 rounded-lg bg-white/20 font-medium text-left">🏠 Inicio</button>
+                    <button onclick="navigateTo('timbres'); toggleMobileMenu()" class="nav-link px-4 py-3 rounded-lg hover:bg-white/20 font-medium text-left">🖨️ Timbres</button>
+                    <button onclick="navigateTo('formularios'); toggleMobileMenu()" class="nav-link px-4 py-3 rounded-lg hover:bg-white/20 font-medium text-left">📋 Formularios</button>
+                    <button onclick="navigateTo('recetas'); toggleMobileMenu()" class="nav-link px-4 py-3 rounded-lg hover:bg-white/20 font-medium text-left">🩺 Recetas</button>
+                    <button onclick="navigateTo('contacto'); toggleMobileMenu()" class="nav-link px-4 py-3 rounded-lg hover:bg-white/20 font-medium text-left">📞 Contacto</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ==================== HOME SECTION ==================== -->
+    <section id="home" class="section-view active">
+        <!-- Hero -->
+        <div class="py-20 bg-white relative overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 opacity-50"></div>
+            <div class="container mx-auto px-4 text-center relative z-10">
+                <div class="floating mb-6"><span class="text-7xl">✨</span></div>
+                <h2 class="text-4xl md:text-6xl font-black text-gray-800 mb-6">
+                    Todo lo que necesitas para tu <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">Negocio Profesional</span>
+                </h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto mb-10">
+                    En <strong>Librería Central</strong> fabricamos timbres personalizados, formularios a medida y recetas médicas profesionales.
+                </p>
+                <div class="flex flex-wrap justify-center gap-4">
+                    <button onclick="navigateTo('timbres')" class="gradient-timbres hover:opacity-90 text-white font-bold py-4 px-8 rounded-full shadow-lg btn-glow transition">
+                        <i class="fas fa-stamp mr-2"></i>Ver Timbres
+                    </button>
+                    <button onclick="navigateTo('formularios')" class="gradient-formularios hover:opacity-90 text-white font-bold py-4 px-8 rounded-full shadow-lg btn-glow transition">
+                        <i class="fas fa-file-alt mr-2"></i>Ver Formularios
+                    </button>
+                    <button onclick="navigateTo('recetas')" class="gradient-recetas hover:opacity-90 text-white font-bold py-4 px-8 rounded-full shadow-lg btn-glow transition">
+                        <i class="fas fa-prescription mr-2"></i>Ver Recetas
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Services -->
+        <div class="py-16 bg-gray-100">
+            <div class="container mx-auto px-4">
+                <h3 class="text-3xl font-bold text-center mb-12">Nuestros Servicios</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Timbres -->
+                    <div class="service-card bg-white rounded-2xl shadow-lg overflow-hidden cursor-pointer" onclick="navigateTo('timbres')">
+                        <div class="h-48 gradient-timbres flex items-center justify-center">
+                            <i class="fas fa-stamp text-6xl text-white"></i>
+                        </div>
+                        <div class="p-6">
+                            <h4 class="text-xl font-bold text-gray-800 mb-3">Timbres y Sellos</h4>
+                            <p class="text-gray-600 mb-4">Trodat, Automatik, personalizados. Desde $6.990.</p>
+                            <ul class="text-sm text-gray-500 space-y-2 mb-6">
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Escritorio y bolsillo</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Texto personalizado</li>
+                            </ul>
+                            <button class="block w-full gradient-timbres text-white font-bold py-3 rounded-lg transition">Ir a Timbres →</button>
+                        </div>
+                    </div>
+                    <!-- Formularios -->
+                    <div class="service-card bg-white rounded-2xl shadow-lg overflow-hidden cursor-pointer" onclick="navigateTo('formularios')">
+                        <div class="h-48 gradient-formularios flex items-center justify-center">
+                            <i class="fas fa-file-alt text-6xl text-white"></i>
+                        </div>
+                        <div class="p-6">
+                            <h4 class="text-xl font-bold text-gray-800 mb-3">Formularios</h4>
+                            <p class="text-gray-600 mb-4">Órdenes, guías, comprobantes. Simple a triplicado.</p>
+                            <ul class="text-sm text-gray-500 space-y-2 mb-6">
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Tamaños: 1/4, 1/2, Carta, Oficio</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Diseño personalizado</li>
+                            </ul>
+                            <button class="block w-full gradient-formularios text-white font-bold py-3 rounded-lg transition">Ir a Formularios →</button>
+                        </div>
+                    </div>
+                    <!-- Recetas -->
+                    <div class="service-card bg-white rounded-2xl shadow-lg overflow-hidden cursor-pointer" onclick="navigateTo('recetas')">
+                        <div class="h-48 gradient-recetas flex items-center justify-center">
+                            <i class="fas fa-prescription text-6xl text-white"></i>
+                        </div>
+                        <div class="p-6">
+                            <h4 class="text-xl font-bold text-gray-800 mb-3">Recetas Médicas</h4>
+                            <p class="text-gray-600 mb-4">11 plantillas profesionales con editor avanzado.</p>
+                            <ul class="text-sm text-gray-500 space-y-2 mb-6">
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Editor 100% personalizable</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Descarga en HD</li>
+                            </ul>
+                            <button class="block w-full gradient-recetas text-white font-bold py-3 rounded-lg transition">Ir a Recetas →</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== TIMBRES SECTION ==================== -->
+    <section id="timbres" class="section-view">
+        <div class="py-12 bg-white">
+            <div class="container mx-auto px-4 text-center">
+                <h2 class="text-4xl font-black text-gray-800 mb-4">🖨️ Timbres y Sellos Personalizados</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">Elige tu modelo, define tu texto y recibe tu pedido directamente en tu WhatsApp</p>
+            </div>
+        </div>
+
+        <div class="py-12 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <h3 class="text-2xl font-bold text-gray-800 mb-8 text-center">Nuestros Modelos</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Product 1 -->
+                    <div class="bg-white rounded-2xl shadow-md overflow-hidden card-hover">
+                        <div class="h-64 overflow-hidden bg-gray-100 flex items-center justify-center p-4">
+                            <img src="https://raw.githubusercontent.com/jamac2006/timbrescentral/refs/heads/main/4911.jpg" alt="Trodat 4911" class="h-full object-contain">
+                        </div>
+                        <div class="p-6">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="text-xl font-bold text-gray-900">Trodat 4911</h4>
+                                <span class="bg-purple-100 text-purple-800 text-xs font-semibold px-2.5 py-0.5 rounded">$15.000</span>
+                            </div>
+                            <p class="text-gray-600 text-sm mb-4">Clásico de escritorio. Disponible en Azul y Fucsia.</p>
+                            <button onclick="selectTimbre('Trodat 4911', ['Azul', 'Fucsia'])" class="w-full gradient-timbres text-white font-bold py-2 px-4 rounded-lg">Seleccionar Modelo</button>
+                        </div>
+                    </div>
+                    <!-- Product 2 -->
+                    <div class="bg-white rounded-2xl shadow-md overflow-hidden card-hover">
+                        <div class="h-64 overflow-hidden bg-gray-100 flex items-center justify-center p-4">
+                            <img src="https://raw.githubusercontent.com/jamac2006/timbrescentral/refs/heads/main/4913.jpg" alt="Trodat 4913" class="h-full object-contain">
+                        </div>
+                        <div class="p-6">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="text-xl font-bold text-gray-900">Trodat 4913</h4>
+                                <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded">$18.000</span>
+                            </div>
+                            <p class="text-gray-600 text-sm mb-4">Modelo robusto de escritorio. Color Rojo.</p>
+                            <button onclick="selectTimbre('Trodat 4913', ['Rojo'])" class="w-full gradient-timbres text-white font-bold py-2 px-4 rounded-lg">Seleccionar Modelo</button>
+                        </div>
+                    </div>
+                    <!-- Product 3 -->
+                    <div class="bg-white rounded-2xl shadow-md overflow-hidden card-hover">
+                        <div class="h-64 overflow-hidden bg-gray-100 flex items-center justify-center p-4">
+                            <img src="https://raw.githubusercontent.com/jamac2006/timbrescentral/refs/heads/main/946.jpg" alt="Automatik 946" class="h-full object-contain">
+                        </div>
+                        <div class="p-6">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="text-xl font-bold text-gray-900">Automatik 946</h4>
+                                <span class="bg-gray-200 text-gray-800 text-xs font-semibold px-2.5 py-0.5 rounded">$23.000</span>
+                            </div>
+                            <p class="text-gray-600 text-sm mb-4">Alta durabilidad y diseño ergonómico.</p>
+                            <button onclick="selectTimbre('Automatik 946', ['Estándar'])" class="w-full gradient-timbres text-white font-bold py-2 px-4 rounded-lg">Seleccionar Modelo</button>
+                        </div>
+                    </div>
+                    <!-- Product 4 -->
+                    <div class="bg-white rounded-2xl shadow-md overflow-hidden card-hover">
+                        <div class="h-64 overflow-hidden bg-gray-100 flex items-center justify-center p-4">
+                            <img src="https://raw.githubusercontent.com/jamac2006/timbrescentral/refs/heads/main/930.jpg" alt="Automatik 30mm" class="h-full object-contain">
+                        </div>
+                        <div class="p-6">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="text-xl font-bold text-gray-900">Automatik 30mm</h4>
+                                <span class="bg-green-100 text-green-800 text-xs font-semibold px-2.5 py-0.5 rounded">$18.000</span>
+                            </div>
+                            <p class="text-gray-600 text-sm mb-4">Timbre redondo compacto. Diámetro 30mm.</p>
+                            <button onclick="selectTimbre('Automatik 30mm', ['Estándar'])" class="w-full gradient-timbres text-white font-bold py-2 px-4 rounded-lg">Seleccionar Modelo</button>
+                        </div>
+                    </div>
+                    <!-- Product 5 -->
+                    <div class="bg-white rounded-2xl shadow-md overflow-hidden card-hover">
+                        <div class="h-64 overflow-hidden bg-gray-100 flex items-center justify-center p-4">
+                            <img src="https://raw.githubusercontent.com/jamac2006/timbrescentral/refs/heads/main/940.jpg" alt="Automatik 40mm" class="h-full object-contain">
+                        </div>
+                        <div class="p-6">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="text-xl font-bold text-gray-900">Automatik 40mm</h4>
+                                <span class="bg-green-100 text-green-800 text-xs font-semibold px-2.5 py-0.5 rounded">$23.000</span>
+                            </div>
+                            <p class="text-gray-600 text-sm mb-4">Timbre redondo grande. Diámetro 40mm.</p>
+                            <button onclick="selectTimbre('Automatik 40mm', ['Estándar'])" class="w-full gradient-timbres text-white font-bold py-2 px-4 rounded-lg">Seleccionar Modelo</button>
+                        </div>
+                    </div>
+                    <!-- Product 6 -->
+                    <div class="bg-white rounded-2xl shadow-md overflow-hidden card-hover">
+                        <div class="h-64 overflow-hidden bg-gray-100 flex items-center justify-center p-4">
+                            <img src="https://raw.githubusercontent.com/jamac2006/timbrescentral/refs/heads/main/bolsillo.jpg" alt="Trodat 9511" class="h-full object-contain">
+                        </div>
+                        <div class="p-6">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="text-xl font-bold text-gray-900">Trodat 9511 Bolsillo</h4>
+                                <span class="bg-pink-100 text-pink-800 text-xs font-semibold px-2.5 py-0.5 rounded">$18.000</span>
+                            </div>
+                            <p class="text-gray-600 text-sm mb-4">Portátil. Negro/Gris o Rosado/Celeste.</p>
+                            <button onclick="selectTimbre('Trodat 9511 Bolsillo', ['Negro/Gris', 'Rosado/Celeste'])" class="w-full gradient-timbres text-white font-bold py-2 px-4 rounded-lg">Seleccionar Modelo</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Timbres Order Form -->
+        <div id="timbres-order" class="py-16 bg-white hidden">
+            <div class="container mx-auto px-4 max-w-3xl">
+                <div class="gradient-timbres rounded-3xl shadow-2xl p-8 text-white">
+                    <h3 class="text-3xl font-bold text-center mb-2">📝 Realiza tu Pedido</h3>
+                    <p class="text-center text-white/90 mb-8">Completa el formulario y te redireccionaremos a WhatsApp</p>
+                    <form onsubmit="handleTimbreOrder(event)" class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div><label class="block text-sm font-medium mb-1">Nombre Completo *</label><input type="text" id="timbreName" required class="w-full px-4 py-2 rounded-lg bg-white/20 border border-white/30 text-white"></div>
+                            <div><label class="block text-sm font-medium mb-1">Teléfono *</label><input type="tel" id="timbrePhone" required class="w-full px-4 py-2 rounded-lg bg-white/20 border border-white/30 text-white"></div>
+                        </div>
+                        <div><label class="block text-sm font-medium mb-1">Correo Electrónico *</label><input type="email" id="timbreEmail" required class="w-full px-4 py-2 rounded-lg bg-white/20 border border-white/30 text-white"></div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div><label class="block text-sm font-medium mb-1">Modelo *</label><select id="timbreModel" required class="w-full px-4 py-2 rounded-lg bg-white/20 border border-white/30 text-white"><option value="">Selecciona...</option><option value="Trodat 4911">Trodat 4911 ($15.000)</option><option value="Trodat 4913">Trodat 4913 ($18.000)</option><option value="Automatik 946">Automatik 946 ($23.000)</option><option value="Automatik 30mm">Automatik 30mm ($18.000)</option><option value="Automatik 40mm">Automatik 40mm ($23.000)</option><option value="Trodat 9511 Bolsillo">Trodat 9511 Bolsillo ($18.000)</option></select></div>
+                            <div><label class="block text-sm font-medium mb-1">Color *</label><select id="timbreColor" required class="w-full px-4 py-2 rounded-lg bg-white/20 border border-white/30 text-white"><option value="">Selecciona...</option></select></div>
+                        </div>
+                        <div><label class="block text-sm font-medium mb-1">Texto del Timbre *</label><textarea id="timbreText" required rows="3" class="w-full px-4 py-2 rounded-lg bg-white/20 border border-white/30 text-white"></textarea></div>
+                        <div><label class="block text-sm font-medium mb-1">Cantidad</label><input type="number" id="timbreQty" min="1" value="1" class="w-full md:w-1/3 px-4 py-2 rounded-lg bg-white/20 border border-white/30 text-white"></div>
+                        <button type="submit" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-4 rounded-xl text-lg btn-glow"><i class="fab fa-whatsapp mr-2"></i>Enviar por WhatsApp</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== FORMULARIOS SECTION ==================== -->
+    <section id="formularios" class="section-view">
+        <div class="py-12 bg-white">
+            <div class="container mx-auto px-4 text-center">
+                <h2 class="text-4xl font-black text-gray-800 mb-4">📋 Formularios y Talonarios Personalizados</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">Fabricamos órdenes de trabajo, guías de despacho, comprobantes y más</p>
+            </div>
+        </div>
+
+        <div class="py-6 bg-gradient-to-r from-yellow-50 to-pink-50">
+            <div class="container mx-auto px-4">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="bg-white p-4 rounded-xl shadow text-center"><span class="text-3xl">📄</span><p class="font-semibold text-sm mt-2">Simple, Duplicado o Triplicado</p></div>
+                    <div class="bg-white p-4 rounded-xl shadow text-center"><span class="text-3xl">✏️</span><p class="font-semibold text-sm mt-2">Texto Personalizado</p></div>
+                    <div class="bg-white p-4 rounded-xl shadow text-center"><span class="text-3xl">📎</span><p class="font-semibold text-sm mt-2">Sube tu Archivo</p></div>
+                    <div class="bg-white p-4 rounded-xl shadow text-center"><span class="text-3xl">💬</span><p class="font-semibold text-sm mt-2">Pedido por WhatsApp</p></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="py-12 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <h3 class="text-2xl font-bold text-gray-800 mb-8 text-center">Catálogo de Talonarios</h3>
+                
+                <!-- 1/4 Carta -->
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-8">
+                    <div class="gradient-formularios text-white px-6 py-4"><h4 class="text-xl font-bold">📐 Tamaño 1/4 Carta (10x14 cm)</h4></div>
+                    <div class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div class="border-2 border-gray-100 rounded-xl p-4 card-hover cursor-pointer hover:border-purple-400" onclick="selectFormulario('1/4 Carta - Original', '100 hojas solo Original Blanca', 6990)">
+                            <div class="flex justify-between items-start mb-2"><span class="font-bold text-gray-800">Original</span><span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">$6.990</span></div>
+                            <p class="text-gray-600 text-sm">100 hojas solo Original Blanca</p>
+                            <button class="mt-3 w-full bg-purple-100 text-purple-700 font-semibold py-1.5 rounded-lg text-sm">Seleccionar</button>
+                        </div>
+                        <div class="border-2 border-gray-100 rounded-xl p-4 card-hover cursor-pointer hover:border-purple-400" onclick="selectFormulario('1/4 Carta - Duplicado', '100 Hojas (50 Original + 50 Copia)', 7990)">
+                            <div class="flex justify-between items-start mb-2"><span class="font-bold text-gray-800">Duplicado</span><span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">$7.990</span></div>
+                            <p class="text-gray-600 text-sm">100 Hojas (50 Original + 50 Copia)</p>
+                            <button class="mt-3 w-full bg-purple-100 text-purple-700 font-semibold py-1.5 rounded-lg text-sm">Seleccionar</button>
+                        </div>
+                        <div class="border-2 border-gray-100 rounded-xl p-4 card-hover cursor-pointer hover:border-purple-400" onclick="selectFormulario('1/4 Carta - Duplicado', '200 Hojas (100 Original + 100 Copias)', 12990)">
+                            <div class="flex justify-between items-start mb-2"><span class="font-bold text-gray-800">Duplicado</span><span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">$12.990</span></div>
+                            <p class="text-gray-600 text-sm">200 Hojas (100 Original + 100 Copias)</p>
+                            <button class="mt-3 w-full bg-purple-100 text-purple-700 font-semibold py-1.5 rounded-lg text-sm">Seleccionar</button>
+                        </div>
+                        <div class="border-2 border-gray-100 rounded-xl p-4 card-hover cursor-pointer hover:border-purple-400" onclick="selectFormulario('1/4 Carta - Triplicado', '150 hojas (50+50+50)', 14990)">
+                            <div class="flex justify-between items-start mb-2"><span class="font-bold text-gray-800">Triplicado</span><span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">$14.990</span></div>
+                            <p class="text-gray-600 text-sm">150 hojas (50+50+50)</p>
+                            <button class="mt-3 w-full bg-purple-100 text-purple-700 font-semibold py-1.5 rounded-lg text-sm">Seleccionar</button>
+                        </div>
+                        <div class="border-2 border-gray-100 rounded-xl p-4 card-hover cursor-pointer hover:border-purple-400" onclick="selectFormulario('1/4 Carta - Triplicado', '300 hojas (100+100+100)', 18990)">
+                            <div class="flex justify-between items-start mb-2"><span class="font-bold text-gray-800">Triplicado</span><span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">$18.990</span></div>
+                            <p class="text-gray-600 text-sm">300 hojas (100+100+100)</p>
+                            <button class="mt-3 w-full bg-purple-100 text-purple-700 font-semibold py-1.5 rounded-lg text-sm">Seleccionar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 1/2 Carta -->
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-8">
+                    <div class="gradient-formularios text-white px-6 py-4"><h4 class="text-xl font-bold">📐 Tamaño 1/2 Carta (14x20 cm)</h4></div>
+                    <div class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div class="border-2 border-gray-100 rounded-xl p-4 card-hover cursor-pointer hover:border-purple-400" onclick="selectFormulario('1/2 Carta - Original', '100 hojas solo Original Blanca', 12990)">
+                            <div class="flex justify-between items-start mb-2"><span class="font-bold text-gray-800">Original</span><span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">$12.990</span></div>
+                            <p class="text-gray-600 text-sm">100 hojas solo Original Blanca</p>
+                            <button class="mt-3 w-full bg-purple-100 text-purple-700 font-semibold py-1.5 rounded-lg text-sm">Seleccionar</button>
+                        </div>
+                        <div class="border-2 border-gray-100 rounded-xl p-4 card-hover cursor-pointer hover:border-purple-400" onclick="selectFormulario('1/2 Carta - Duplicado', '100 Hojas (50 Original + 50 Copia)', 14990)">
+                            <div class="flex justify-between items-start mb-2"><span class="font-bold text-gray-800">Duplicado</span><span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">$14.990</span></div>
+                            <p class="text-gray-600 text-sm">100 Hojas (50 Original + 50 Copia)</p>
+                            <button class="mt-3 w-full bg-purple-100 text-purple-700 font-semibold py-1.5 rounded-lg text-sm">Seleccionar</button>
+                        </div>
+                        <div class="border-2 border-gray-100 rounded-xl p-4 card-hover cursor-pointer hover:border-purple-400" onclick="selectFormulario('1/2 Carta - Duplicado', '200 Hojas (100 Original + 100 Copias)', 18990)">
+                            <div class="flex justify-between items-start mb-2"><span class="font-bold text-gray-800">Duplicado</span><span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">$18.990</span></div>
+                            <p class="text-gray-600 text-sm">200 Hojas (100 Original + 100 Copias)</p>
+                            <button class="mt-3 w-full bg-purple-100 text-purple-700 font-semibold py-1.5 rounded-lg text-sm">Seleccionar</button>
+                        </div>
+                        <div class="border-2 border-gray-100 rounded-xl p-4 card-hover cursor-pointer hover:border-purple-400" onclick="selectFormulario('1/2 Carta - Triplicado', '150 hojas (50+50+50)', 24990)">
+                            <div class="flex justify-between items-start mb-2"><span class="font-bold text-gray-800">Triplicado</span><span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">$24.990</span></div>
+                            <p class="text-gray-600 text-sm">150 hojas (50+50+50)</p>
+                            <button class="mt-3 w-full bg-purple-100 text-purple-700 font-semibold py-1.5 rounded-lg text-sm">Seleccionar</button>
+                        </div>
+                        <div class="border-2 border-gray-100 rounded-xl p-4 card-hover cursor-pointer hover:border-purple-400" onclick="selectFormulario('1/2 Carta - Triplicado', '300 hojas (100+100+100)', 29990)">
+                            <div class="flex justify-between items-start mb-2"><span class="font-bold text-gray-800">Triplicado</span><span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">$29.990</span></div>
+                            <p class="text-gray-600 text-sm">300 hojas (100+100+100)</p>
+                            <button class="mt-3 w-full bg-purple-100 text-purple-700 font-semibold py-1.5 rounded-lg text-sm">Seleccionar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Carta -->
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-8">
+                    <div class="gradient-formularios text-white px-6 py-4"><h4 class="text-xl font-bold">📐 Tamaño Carta (21x27 cm)</h4></div>
+                    <div class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div class="border-2 border-gray-100 rounded-xl p-4 card-hover cursor-pointer hover:border-purple-400" onclick="selectFormulario('Carta - Original', '100 hojas solo Original Blanca', 12990)">
+                            <div class="flex justify-between items-start mb-2"><span class="font-bold text-gray-800">Original</span><span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">$12.990</span></div>
+                            <p class="text-gray-600 text-sm">100 hojas solo Original Blanca</p>
+                            <button class="mt-3 w-full bg-purple-100 text-purple-700 font-semibold py-1.5 rounded-lg text-sm">Seleccionar</button>
+                        </div>
+                        <div class="border-2 border-gray-100 rounded-xl p-4 card-hover cursor-pointer hover:border-purple-400" onclick="selectFormulario('Carta - Duplicado', '100 Hojas (50 Original + 50 Copia)', 18990)">
+                            <div class="flex justify-between items-start mb-2"><span class="font-bold text-gray-800">Duplicado</span><span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">$18.990</span></div>
+                            <p class="text-gray-600 text-sm">100 Hojas (50 Original + 50 Copia)</p>
+                            <button class="mt-3 w-full bg-purple-100 text-purple-700 font-semibold py-1.5 rounded-lg text-sm">Seleccionar</button>
+                        </div>
+                        <div class="border-2 border-gray-100 rounded-xl p-4 card-hover cursor-pointer hover:border-purple-400" onclick="selectFormulario('Carta - Duplicado', '200 Hojas (100 Original + 100 Copias)', 24990)">
+                            <div class="flex justify-between items-start mb-2"><span class="font-bold text-gray-800">Duplicado</span><span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">$24.990</span></div>
+                            <p class="text-gray-600 text-sm">200 Hojas (100 Original + 100 Copias)</p>
+                            <button class="mt-3 w-full bg-purple-100 text-purple-700 font-semibold py-1.5 rounded-lg text-sm">Seleccionar</button>
+                        </div>
+                        <div class="border-2 border-gray-100 rounded-xl p-4 card-hover cursor-pointer hover:border-purple-400" onclick="selectFormulario('Carta - Triplicado', '150 hojas (50+50+50)', 28990)">
+                            <div class="flex justify-between items-start mb-2"><span class="font-bold text-gray-800">Triplicado</span><span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">$28.990</span></div>
+                            <p class="text-gray-600 text-sm">150 hojas (50+50+50)</p>
+                            <button class="mt-3 w-full bg-purple-100 text-purple-700 font-semibold py-1.5 rounded-lg text-sm">Seleccionar</button>
+                        </div>
+                        <div class="border-2 border-gray-100 rounded-xl p-4 card-hover cursor-pointer hover:border-purple-400" onclick="selectFormulario('Carta - Triplicado', '300 hojas (100+100+100)', 32990)">
+                            <div class="flex justify-between items-start mb-2"><span class="font-bold text-gray-800">Triplicado</span><span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">$32.990</span></div>
+                            <p class="text-gray-600 text-sm">300 hojas (100+100+100)</p>
+                            <button class="mt-3 w-full bg-purple-100 text-purple-700 font-semibold py-1.5 rounded-lg text-sm">Seleccionar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Oficio -->
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-8">
+                    <div class="gradient-formularios text-white px-6 py-4"><h4 class="text-xl font-bold">📐 Tamaño Oficio (21x32 cm)</h4></div>
+                    <div class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div class="border-2 border-gray-100 rounded-xl p-4 card-hover cursor-pointer hover:border-purple-400" onclick="selectFormulario('Oficio - Original', '100 hojas solo Original Blanca', 13990)">
+                            <div class="flex justify-between items-start mb-2"><span class="font-bold text-gray-800">Original</span><span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">$13.990</span></div>
+                            <p class="text-gray-600 text-sm">100 hojas solo Original Blanca</p>
+                            <button class="mt-3 w-full bg-purple-100 text-purple-700 font-semibold py-1.5 rounded-lg text-sm">Seleccionar</button>
+                        </div>
+                        <div class="border-2 border-gray-100 rounded-xl p-4 card-hover cursor-pointer hover:border-purple-400" onclick="selectFormulario('Oficio - Duplicado', '100 Hojas (50 Original + 50 Copia)', 19990)">
+                            <div class="flex justify-between items-start mb-2"><span class="font-bold text-gray-800">Duplicado</span><span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">$19.990</span></div>
+                            <p class="text-gray-600 text-sm">100 Hojas (50 Original + 50 Copia)</p>
+                            <button class="mt-3 w-full bg-purple-100 text-purple-700 font-semibold py-1.5 rounded-lg text-sm">Seleccionar</button>
+                        </div>
+                        <div class="border-2 border-gray-100 rounded-xl p-4 card-hover cursor-pointer hover:border-purple-400" onclick="selectFormulario('Oficio - Duplicado', '200 Hojas (100 Original + 100 Copias)', 26990)">
+                            <div class="flex justify-between items-start mb-2"><span class="font-bold text-gray-800">Duplicado</span><span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">$26.990</span></div>
+                            <p class="text-gray-600 text-sm">200 Hojas (100 Original + 100 Copias)</p>
+                            <button class="mt-3 w-full bg-purple-100 text-purple-700 font-semibold py-1.5 rounded-lg text-sm">Seleccionar</button>
+                        </div>
+                        <div class="border-2 border-gray-100 rounded-xl p-4 card-hover cursor-pointer hover:border-purple-400" onclick="selectFormulario('Oficio - Triplicado', '150 hojas (50+50+50)', 29990)">
+                            <div class="flex justify-between items-start mb-2"><span class="font-bold text-gray-800">Triplicado</span><span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">$29.990</span></div>
+                            <p class="text-gray-600 text-sm">150 hojas (50+50+50)</p>
+                            <button class="mt-3 w-full bg-purple-100 text-purple-700 font-semibold py-1.5 rounded-lg text-sm">Seleccionar</button>
+                        </div>
+                        <div class="border-2 border-gray-100 rounded-xl p-4 card-hover cursor-pointer hover:border-purple-400" onclick="selectFormulario('Oficio - Triplicado', '300 hojas (100+100+100)', 34990)">
+                            <div class="flex justify-between items-start mb-2"><span class="font-bold text-gray-800">Triplicado</span><span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">$34.990</span></div>
+                            <p class="text-gray-600 text-sm">300 hojas (100+100+100)</p>
+                            <button class="mt-3 w-full bg-purple-100 text-purple-700 font-semibold py-1.5 rounded-lg text-sm">Seleccionar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Receta Médica -->
+                <div class="bg-gradient-to-r from-red-500 to-pink-600 rounded-2xl shadow-lg overflow-hidden text-white mb-8">
+                    <div class="px-6 py-4 flex items-center gap-3"><span class="text-3xl">🩺</span><h4 class="text-xl font-bold">TALONARIO RECETA MÉDICA</h4></div>
+                    <div class="p-6 bg-white/10">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="border-2 border-white/30 rounded-xl p-4 card-hover cursor-pointer hover:border-white" onclick="selectFormulario('Receta Médica', '100 hojas - Formato estándar', 9990)">
+                                <div class="flex justify-between items-start mb-2"><span class="font-bold">Receta Médica Estándar</span><span class="bg-white text-red-600 text-sm font-bold px-3 py-1 rounded-full">$9.990</span></div>
+                                <p class="text-white/90 text-sm">100 hojas - Formato profesional</p>
+                                <button class="mt-3 w-full bg-white text-red-600 font-semibold py-1.5 rounded-lg text-sm">Seleccionar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Formularios Order Form -->
+        <div id="formularios-order" class="py-16 bg-white hidden">
+            <div class="container mx-auto px-4 max-w-4xl">
+                <div class="gradient-formularios rounded-3xl shadow-2xl p-8 text-white">
+                    <h3 class="text-3xl font-bold text-center mb-2">📝 Realiza tu Pedido</h3>
+                    <p class="text-center text-white/90 mb-8">Completa el formulario y te redireccionaremos a WhatsApp</p>
+                    <form onsubmit="handleFormularioOrder(event)" class="space-y-6">
+                        <div class="bg-white/10 rounded-2xl p-6">
+                            <h4 class="font-bold text-lg mb-4">👤 Datos del Cliente</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div><label class="block text-sm font-medium mb-1">Nombre Completo *</label><input type="text" id="formName" required class="w-full px-4 py-2 rounded-lg bg-white/20 border border-white/30 text-white"></div>
+                                <div><label class="block text-sm font-medium mb-1">Teléfono *</label><input type="tel" id="formPhone" required class="w-full px-4 py-2 rounded-lg bg-white/20 border border-white/30 text-white"></div>
+                                <div><label class="block text-sm font-medium mb-1">Correo *</label><input type="email" id="formEmail" required class="w-full px-4 py-2 rounded-lg bg-white/20 border border-white/30 text-white"></div>
+                            </div>
+                        </div>
+                        <div class="bg-white/10 rounded-2xl p-6">
+                            <h4 class="font-bold text-lg mb-4">📦 Detalles del Pedido</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div><label class="block text-sm font-medium mb-1">Tipo *</label><input type="text" id="formType" readonly class="w-full px-4 py-2 rounded-lg bg-white/20 border border-white/30 text-white"></div>
+                                <div><label class="block text-sm font-medium mb-1">Cantidad *</label><input type="number" id="formQty" min="1" value="1" required class="w-full px-4 py-2 rounded-lg bg-white/20 border border-white/30 text-white"></div>
+                            </div>
+                            <div class="mt-4"><label class="block text-sm font-medium mb-1">Descripción *</label><textarea id="formSpecs" required rows="3" class="w-full px-4 py-2 rounded-lg bg-white/20 border border-white/30 text-white"></textarea></div>
+                        </div>
+                        <div class="bg-white/10 rounded-2xl p-6">
+                            <h4 class="font-bold text-lg mb-4">💰 Resumen</h4>
+                            <div class="flex justify-between items-center"><span class="text-lg">Total:</span><span class="text-3xl font-black" id="formTotal">$0</span></div>
+                        </div>
+                        <button type="submit" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-4 rounded-xl text-lg btn-glow"><i class="fab fa-whatsapp mr-2"></i>Enviar por WhatsApp</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== RECETAS SECTION ==================== -->
+    <section id="recetas" class="section-view">
+        <div class="py-12 bg-white">
+            <div class="container mx-auto px-4 text-center">
+                <h2 class="text-4xl font-black text-gray-800 mb-4">🩺 Recetas Médicas Profesionales</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">11 plantillas profesionales con editor 100% personalizable</p>
+            </div>
+        </div>
+
+        <div class="py-12 bg-gray-100">
+            <div class="container mx-auto px-4">
+                <h3 class="text-3xl font-bold text-center mb-4">🎨 Selecciona una Plantilla</h3>
+                <p class="text-center text-gray-600 mb-12">Luego podrás editar TODO: mover, redimensionar, cambiar colores</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Template Cards -->
+                    <div class="template-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer" onclick="selectRecetaTemplate(1)">
+                        <div class="h-64 bg-gradient-to-br from-green-50 to-emerald-100 p-4 flex items-center justify-center"><div class="text-center"><div class="text-5xl mb-2">🦷</div><div class="font-bold text-green-800">Dental</div></div></div>
+                        <div class="p-4"><h4 class="font-bold text-gray-800">1. Plantilla Dental</h4><button class="mt-2 w-full gradient-timbres text-white py-2 rounded-lg">Usar Plantilla</button></div>
+                    </div>
+                    <div class="template-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer" onclick="selectRecetaTemplate(2)">
+                        <div class="h-64 bg-gray-100 p-4 flex items-center justify-center"><div class="text-center"><div class="text-5xl mb-2">⚕️</div><div class="font-bold text-gray-800">Clásica</div></div></div>
+                        <div class="p-4"><h4 class="font-bold text-gray-800">2. Clásica Minimalista</h4><button class="mt-2 w-full bg-gray-700 text-white py-2 rounded-lg">Usar Plantilla</button></div>
+                    </div>
+                    <div class="template-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer" onclick="selectRecetaTemplate(3)">
+                        <div class="h-64 bg-gradient-to-br from-green-100 to-teal-100 p-4 flex items-center justify-center"><div class="text-center"><div class="text-5xl mb-2">✚</div><div class="font-bold text-green-800">Verde</div></div></div>
+                        <div class="p-4"><h4 class="font-bold text-gray-800">3. Verde Moderna</h4><button class="mt-2 w-full gradient-formularios text-white py-2 rounded-lg">Usar Plantilla</button></div>
+                    </div>
+                    <div class="template-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer" onclick="selectRecetaTemplate(4)">
+                        <div class="h-64 bg-gradient-to-br from-blue-50 to-indigo-100 p-4 flex items-center justify-center"><div class="text-center"><div class="text-5xl mb-2">🏥</div><div class="font-bold text-blue-800">Azul</div></div></div>
+                        <div class="p-4"><h4 class="font-bold text-gray-800">4. Azul Profesional</h4><button class="mt-2 w-full bg-blue-600 text-white py-2 rounded-lg">Usar Plantilla</button></div>
+                    </div>
+                    <div class="template-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer" onclick="selectRecetaTemplate(5)">
+                        <div class="h-64 bg-gradient-to-br from-purple-50 to-pink-100 p-4 flex items-center justify-center"><div class="text-center"><div class="text-5xl mb-2">🐾</div><div class="font-bold text-purple-800">Veterinaria</div></div></div>
+                        <div class="p-4"><h4 class="font-bold text-gray-800">5. Veterinaria</h4><button class="mt-2 w-full bg-purple-600 text-white py-2 rounded-lg">Usar Plantilla</button></div>
+                    </div>
+                    <div class="template-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer" onclick="selectRecetaTemplate(6)">
+                        <div class="h-64 bg-gray-100 p-4 flex items-center justify-center"><div class="text-center"><div class="text-5xl mb-2">📋</div><div class="font-bold text-red-800">Sidebar</div></div></div>
+                        <div class="p-4"><h4 class="font-bold text-gray-800">6. Barra Lateral</h4><button class="mt-2 w-full bg-red-600 text-white py-2 rounded-lg">Usar Plantilla</button></div>
+                    </div>
+                    <div class="template-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer" onclick="selectRecetaTemplate(7)">
+                        <div class="h-64 bg-gradient-to-br from-pink-50 to-rose-100 p-4 flex items-center justify-center"><div class="text-center"><div class="text-5xl mb-2">🎨</div><div class="font-bold text-pink-800">Moderna</div></div></div>
+                        <div class="p-4"><h4 class="font-bold text-gray-800">7. Formas Modernas</h4><button class="mt-2 w-full bg-pink-500 text-white py-2 rounded-lg">Usar Plantilla</button></div>
+                    </div>
+                    <div class="template-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer" onclick="selectRecetaTemplate(8)">
+                        <div class="h-64 bg-gradient-to-br from-cyan-50 to-blue-100 p-4 flex items-center justify-center"><div class="text-center"><div class="text-5xl mb-2">👁️</div><div class="font-bold text-cyan-800">Optometría</div></div></div>
+                        <div class="p-4"><h4 class="font-bold text-gray-800">8. Optometría</h4><button class="mt-2 w-full bg-cyan-600 text-white py-2 rounded-lg">Usar Plantilla</button></div>
+                    </div>
+                    <div class="template-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer" onclick="selectRecetaTemplate(9)">
+                        <div class="h-64 bg-gradient-to-br from-yellow-50 to-orange-100 p-4 flex items-center justify-center"><div class="text-center"><div class="text-5xl mb-2">🌈</div><div class="font-bold text-yellow-800">Colorida</div></div></div>
+                        <div class="p-4"><h4 class="font-bold text-gray-800">9. Header Colorido</h4><button class="mt-2 w-full bg-gradient-to-r from-yellow-400 to-pink-500 text-white py-2 rounded-lg">Usar Plantilla</button></div>
+                    </div>
+                    <div class="template-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer" onclick="selectRecetaTemplate(10)">
+                        <div class="h-64 bg-gradient-to-br from-teal-50 to-blue-50 p-4 flex items-center justify-center"><div class="text-center"><div class="text-5xl mb-2">☤</div><div class="font-bold text-teal-800">Caduceo</div></div></div>
+                        <div class="p-4"><h4 class="font-bold text-gray-800">10. Sidebar Vertical</h4><button class="mt-2 w-full bg-teal-600 text-white py-2 rounded-lg">Usar Plantilla</button></div>
+                    </div>
+                    <div class="template-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer" onclick="selectRecetaTemplate(11)">
+                        <div class="h-64 bg-gradient-to-br from-blue-50 to-gray-50 p-4 flex items-center justify-center"><div class="text-center"><div class="text-5xl mb-2">📄</div><div class="font-bold text-blue-800">Header</div></div></div>
+                        <div class="p-4"><h4 class="font-bold text-gray-800">11. Header Derecho</h4><button class="mt-2 w-full bg-blue-500 text-white py-2 rounded-lg">Usar Plantilla</button></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recetas Editor -->
+        <div id="recetas-editor" class="py-12 bg-white hidden">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-6">
+                    <h3 class="text-3xl font-bold mb-2">✏️ Editor Avanzado</h3>
+                    <p class="text-gray-600">Arrastra, redimensiona y personaliza</p>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <!-- Left Panel -->
+                    <div class="lg:col-span-3 space-y-4">
+                        <div class="editor-panel rounded-2xl p-4 shadow-lg">
+                            <h4 class="font-bold text-gray-800 mb-3 border-b pb-2">📝 Datos Básicos</h4>
+                            <div class="mb-3"><label class="block text-xs font-semibold text-gray-700 mb-1">Título</label><input type="text" id="recetaTitle" class="w-full px-3 py-2 border-2 border-gray-300 rounded-lg text-sm" value="Dr." onchange="updateRecetaElement()"><div class="title-suggestions mt-1"><span class="title-suggestion" onclick="setRecetaTitle('Dr.')">Dr.</span><span class="title-suggestion" onclick="setRecetaTitle('Dra.')">Dra.</span><span class="title-suggestion" onclick="setRecetaTitle('Méd. Vet.')">Vet.</span></div></div>
+                            <div class="mb-3"><label class="block text-xs font-semibold text-gray-700 mb-1">Nombre</label><input type="text" id="recetaName" class="w-full px-3 py-2 border-2 border-gray-300 rounded-lg text-sm" placeholder="Tu Nombre" onchange="updateRecetaElement()"></div>
+                            <div class="mb-3"><label class="block text-xs font-semibold text-gray-700 mb-1">Especialidad</label><input type="text" id="recetaSpecialty" class="w-full px-3 py-2 border-2 border-gray-300 rounded-lg text-sm" placeholder="Especialidad" onchange="updateRecetaElement()"></div>
+                            <div class="mb-3"><label class="block text-xs font-semibold text-gray-700 mb-1">Teléfono</label><input type="text" id="recetaPhone" class="w-full px-3 py-2 border-2 border-gray-300 rounded-lg text-sm" onchange="updateRecetaElement()"></div>
+                            <div class="mb-3"><label class="block text-xs font-semibold text-gray-700 mb-1">Color Principal</label><input type="color" id="recetaColor" class="w-full h-10 cursor-pointer rounded" onchange="updateRecetaColors()"></div>
+                        </div>
+                        <div class="property-panel rounded-2xl p-4 shadow-lg" id="recetaProperties" style="display: none;">
+                            <h4 class="font-bold text-gray-800 mb-3 border-b pb-2">🎨 Propiedades</h4>
+                            <div class="mb-3"><label class="block text-xs font-semibold text-gray-700 mb-1">Tamaño</label><input type="range" id="recetaFontSize" min="8" max="72" value="16" class="w-full" oninput="updateRecetaStyle()"><div class="text-xs text-gray-600 text-center"><span id="recetaFontSizeValue">16</span>px</div></div>
+                            <div class="mb-3"><label class="block text-xs font-semibold text-gray-700 mb-1">Color</label><input type="color" id="recetaTextColor" class="w-full h-10 cursor-pointer rounded" onchange="updateRecetaStyle()"></div>
+                            <button onclick="deleteRecetaElement()" class="w-full bg-red-500 text-white py-2 rounded-lg text-sm">🗑️ Eliminar</button>
+                        </div>
+                        <div class="property-panel rounded-2xl p-4 shadow-lg">
+                            <h4 class="font-bold text-gray-800 mb-3 border-b pb-2">🖼️ Logo</h4>
+                            <div class="upload-zone rounded-lg p-4 text-center cursor-pointer mb-3" onclick="document.getElementById('recetaLogoInput').click()">
+                                <input type="file" id="recetaLogoInput" class="hidden" accept="image/*" onchange="handleRecetaLogo(event)">
+                                <div class="text-3xl mb-2">📁</div><p class="text-xs text-gray-600">Sube tu logo</p>
+                            </div>
+                        </div>
+                        <div class="property-panel rounded-2xl p-4 shadow-lg bg-green-50">
+                            <h4 class="font-bold text-gray-800 mb-3 border-b pb-2">💰 Pedido</h4>
+                            <div class="mb-3"><label class="block text-xs font-semibold text-gray-700 mb-1">Tipo</label><select id="recetaPaper" class="w-full px-3 py-2 border-2 border-gray-300 rounded-lg text-sm" onchange="calculateRecetaPrice()"><option value="simple">Simple - $9.990</option><option value="duplicado">Duplicado - $14.990</option><option value="triplicado">Triplicado - $19.990</option></select></div>
+                            <div class="mb-3"><label class="block text-xs font-semibold text-gray-700 mb-1">Cantidad</label><input type="number" id="recetaQty" min="1" value="1" class="w-full px-3 py-2 border-2 border-gray-300 rounded-lg text-sm" onchange="calculateRecetaPrice()"></div>
+                            <div class="text-center mb-3"><div class="text-xs text-gray-600">Total:</div><div class="text-2xl font-black text-green-600" id="recetaTotal">$9.990</div></div>
+                            <button onclick="orderReceta()" class="w-full bg-green-500 text-white font-bold py-3 rounded-lg text-sm btn-glow"><i class="fab fa-whatsapp mr-2"></i>Pedir</button>
+                        </div>
+                    </div>
+                    <!-- Canvas -->
+                    <div class="lg:col-span-9">
+                        <div class="preview-canvas rounded-2xl border-4 border-gray-300 p-8 min-h-[700px] flex items-center justify-center bg-white">
+                            <div id="recetaCanvas" class="bg-white w-full max-w-2xl shadow-2xl relative" style="min-height: 800px;">
+                                <div class="text-center text-gray-400 py-20"><div class="text-6xl mb-4">🎨</div><p class="text-lg font-semibold">Selecciona una plantilla</p></div>
+                            </div>
+                        </div>
+                        <div class="mt-4 flex gap-3 justify-center flex-wrap">
+                            <button onclick="addRecetaElement()" class="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold">➕ Texto</button>
+                            <button onclick="downloadReceta('jpg')" class="bg-purple-600 text-white px-4 py-2 rounded-lg font-semibold">📥 JPG</button>
+                            <button onclick="downloadReceta('pdf')" class="bg-red-600 text-white px-4 py-2 rounded-lg font-semibold">📄 PDF</button>
+                            <button onclick="resetReceta()" class="bg-gray-500 text-white px-4 py-2 rounded-lg font-semibold">🔄 Reiniciar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== CONTACT SECTION ==================== -->
+    <section id="contacto" class="section-view">
+        <div class="py-20 bg-white">
+            <div class="container mx-auto px-4">
+                <div class="max-w-2xl mx-auto text-center">
+                    <h3 class="text-4xl font-black mb-6">📞 Contáctanos</h3>
+                    <p class="text-lg text-gray-600 mb-8">¿Tienes dudas o quieres hacer un pedido? Escríbenos.</p>
+                    <div class="bg-gray-50 rounded-2xl p-8 mb-8">
+                        <div class="space-y-4 text-left">
+                            <p class="flex items-center gap-3"><i class="fas fa-map-marker-alt text-purple-600 w-6"></i><span>Urmeneta #300, Galería Caracol Local 15, Puerto Montt</span></p>
+                            <p class="flex items-center gap-3"><i class="fab fa-whatsapp text-green-500 w-6"></i><a href="https://wa.me/56978472489" class="text-green-600 hover:underline font-medium">+569 78 47 2489</a></p>
+                            <p class="flex items-center gap-3"><i class="fas fa-envelope text-blue-500 w-6"></i><a href="mailto:fta.tecno@gmail.com" class="text-blue-600 hover:underline font-medium">fta.tecno@gmail.com</a></p>
+                            <p class="flex items-center gap-3"><i class="fas fa-clock text-gray-500 w-6"></i><span>Lunes a Viernes: 9:00 - 19:00 hrs</span></p>
+                        </div>
+                    </div>
+                    <a href="https://wa.me/56978472489" target="_blank" class="inline-flex items-center gap-3 bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-8 rounded-full shadow-lg transition text-lg"><i class="fab fa-whatsapp text-2xl"></i>Chatear por WhatsApp</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div><h4 class="text-2xl font-bold mb-4">🏥 Librería Central</h4><p class="text-gray-400 text-sm">Expertos en timbres, formularios y recetas médicas desde 2010.</p></div>
+                <div><h4 class="text-lg font-bold mb-4">📍 Ubicación</h4><p class="text-gray-400 text-sm">Urmeneta #300<br>Galería Caracol Local 15<br>Puerto Montt</p></div>
+                <div><h4 class="text-lg font-bold mb-4">📞 Contacto</h4><p class="text-gray-400 text-sm">📱 +569 78 47 2489<br>📧 fta.tecno@gmail.com<br>🕐 Lun-Vie: 9:00-19:00</p></div>
+                <div><h4 class="text-lg font-bold mb-4">🔗 Servicios</h4><ul class="space-y-2 text-sm text-gray-400"><li><button onclick="navigateTo('timbres')" class="hover:text-white">Timbres</button></li><li><button onclick="navigateTo('formularios')" class="hover:text-white">Formularios</button></li><li><button onclick="navigateTo('recetas')" class="hover:text-white">Recetas</button></li></ul></div>
+            </div>
+            <div class="border-t border-gray-800 mt-8 pt-6 text-center text-sm text-gray-500"><p>© 2024 Librería Central. Todos los derechos reservados.</p></div>
+        </div>
+    </footer>
+
+    <canvas id="exportCanvas"></canvas>
+
+    <script>
+        // ==================== NAVIGATION ====================
+        function navigateTo(section) {
+            document.querySelectorAll('.section-view').forEach(s => s.classList.remove('active'));
+            document.getElementById(section).classList.add('active');
+            document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
+            const navBtn = document.getElementById('nav-' + section);
+            if(navBtn) navBtn.classList.add('active');
+            window.scrollTo(0, 0);
+            
+            // Hide order forms when navigating
+            if(section !== 'timbres') document.getElementById('timbres-order').classList.add('hidden');
+            if(section !== 'formularios') document.getElementById('formularios-order').classList.add('hidden');
+            if(section !== 'recetas') document.getElementById('recetas-editor').classList.add('hidden');
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('mobileMenu').classList.toggle('hidden');
+        }
+
+        // ==================== TIMBRES FUNCTIONS ====================
+        const timbreColors = {
+            'Trodat 4911': ['Azul', 'Fucsia'],
+            'Trodat 4913': ['Rojo'],
+            'Automatik 946': ['Estándar'],
+            'Automatik 30mm': ['Estándar'],
+            'Automatik 40mm': ['Estándar'],
+            'Trodat 9511 Bolsillo': ['Negro/Gris', 'Rosado/Celeste']
+        };
+
+        function selectTimbre(model, colors) {
+            document.getElementById('timbreModel').value = model;
+            const colorSelect = document.getElementById('timbreColor');
+            colorSelect.innerHTML = '';
+            colors.forEach(c => {
+                const opt = document.createElement('option');
+                opt.value = c; opt.textContent = c;
+                colorSelect.appendChild(opt);
+            });
+            document.getElementById('timbres-order').classList.remove('hidden');
+            document.getElementById('timbres-order').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function handleTimbreOrder(e) {
+            e.preventDefault();
+            const name = document.getElementById('timbreName').value;
+            const phone = document.getElementById('timbrePhone').value;
+            const email = document.getElementById('timbreEmail').value;
+            const model = document.getElementById('timbreModel').value;
+            const color = document.getElementById('timbreColor').value;
+            const text = document.getElementById('timbreText').value;
+            const qty = document.getElementById('timbreQty').value;
+            
+            const prices = { 'Trodat 4911': 15000, 'Trodat 4913': 18000, 'Automatik 946': 23000, 'Automatik 30mm': 18000, 'Automatik 40mm': 23000, 'Trodat 9511 Bolsillo': 18000 };
+            const total = (prices[model] || 0) * parseInt(qty);
+            
+            const msg = ` *PEDIDO TIMBRE*%0A%0A👤 ${name}%0A📱 ${phone}%0A📧 ${email}%0A🔹 ${model}%0A🎨 ${color}%0A📝 "${text}"%0A🔢 ${qty}%0A💰 $${total.toLocaleString()}`;
+            window.open(`https://wa.me/56978472489?text=${msg}`, '_blank');
+        }
+
+        // ==================== FORMULARIOS FUNCTIONS ====================
+        let formSelectedPrice = 0;
+
+        function selectFormulario(type, specs, price) {
+            document.getElementById('formType').value = type;
+            formSelectedPrice = price;
+            document.getElementById('formSpecs').value = specs;
+            calculateFormPrice();
+            document.getElementById('formularios-order').classList.remove('hidden');
+            document.getElementById('formularios-order').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function calculateFormPrice() {
+            const qty = parseInt(document.getElementById('formQty').value) || 1;
+            const total = formSelectedPrice * qty;
+            document.getElementById('formTotal').textContent = '$' + total.toLocaleString();
+        }
+
+        function handleFormularioOrder(e) {
+            e.preventDefault();
+            const name = document.getElementById('formName').value;
+            const phone = document.getElementById('formPhone').value;
+            const email = document.getElementById('formEmail').value;
+            const type = document.getElementById('formType').value;
+            const specs = document.getElementById('formSpecs').value;
+            const qty = document.getElementById('formQty').value;
+            const total = document.getElementById('formTotal').textContent;
+            
+            const msg = ` *PEDIDO FORMULARIO*%0A%0A👤 ${name}%0A📱 ${phone}%0A📧 ${email}%0A🔹 ${type}%0A📝 ${specs}%0A🔢 ${qty}%0A💰 ${total}`;
+            window.open(`https://wa.me/56978472489?text=${msg}`, '_blank');
+        }
+
+        document.getElementById('formQty')?.addEventListener('input', calculateFormPrice);
+
+        // ==================== RECETAS FUNCTIONS ====================
+        let recetaCurrentTemplate = null;
+        let recetaSelectedElement = null;
+        let recetaElementCounter = 0;
+        let recetaPrimaryColor = '#10b981';
+
+        const recetaTemplates = {
+            1: { name: 'Dental', color: '#10b981' },
+            2: { name: 'Clásica', color: '#1f2937' },
+            3: { name: 'Verde', color: '#10b981' },
+            4: { name: 'Azul', color: '#2563eb' },
+            5: { name: 'Veterinaria', color: '#8b5cf6' },
+            6: { name: 'Sidebar', color: '#dc2626' },
+            7: { name: 'Moderna', color: '#ec4899' },
+            8: { name: 'Optometría', color: '#06b6d4' },
+            9: { name: 'Colorida', color: '#fbbf24' },
+            10: { name: 'Caduceo', color: '#0f766e' },
+            11: { name: 'Header', color: '#64748b' }
+        };
+
+        function selectRecetaTemplate(num) {
+            recetaCurrentTemplate = num;
+            recetaPrimaryColor = recetaTemplates[num].color;
+            document.getElementById('recetaColor').value = recetaPrimaryColor;
+            document.getElementById('recetas-editor').classList.remove('hidden');
+            document.getElementById('recetas-editor').scrollIntoView({ behavior: 'smooth' });
+            initRecetaTemplate(num);
+        }
+
+        function initRecetaTemplate(num) {
+            const canvas = document.getElementById('recetaCanvas');
+            canvas.innerHTML = '';
+            recetaElementCounter = 0;
+            
+            const elements = [
+                { type: 'text', content: 'Dr. [Tu Nombre]', x: 50, y: 50, fontSize: 32, color: recetaPrimaryColor, fontWeight: 'bold', width: 400, id: 'title' },
+                { type: 'text', content: 'Especialidad', x: 50, y: 90, fontSize: 16, color: '#6b7280', width: 300, id: 'specialty' },
+                { type: 'text', content: '📞 +569 XXX XXX XXX', x: 50, y: 120, fontSize: 14, color: '#6b7280', width: 250, id: 'phone' },
+                { type: 'text', content: 'Nombre:', x: 50, y: 200, fontSize: 14, color: '#374151', width: 100 },
+                { type: 'line', x: 150, y: 205, width: 400, height: 2, color: '#9ca3af' },
+                { type: 'text', content: 'Fecha:', x: 50, y: 750, fontSize: 12, color: '#6b7280', width: 80 },
+                { type: 'text', content: 'Firma:', x: 400, y: 750, fontSize: 12, color: '#6b7280', width: 80 }
+            ];
+            
+            elements.forEach(el => {
+                if(el.type === 'line') createRecetaLine(el);
+                else createRecetaText(el);
+            });
+            
+            calculateRecetaPrice();
+        }
+
+        function createRecetaText(config) {
+            const canvas = document.getElementById('recetaCanvas');
+            const el = document.createElement('div');
+            el.className = 'draggable-element';
+            el.contentEditable = true;
+            el.innerText = config.content;
+            el.style.left = config.x + 'px';
+            el.style.top = config.y + 'px';
+            el.style.fontSize = config.fontSize + 'px';
+            el.style.color = config.color;
+            el.style.fontWeight = config.fontWeight || 'normal';
+            el.style.width = config.width + 'px';
+            el.style.position = 'absolute';
+            el.id = 'receta-el-' + (config.id || recetaElementCounter++);
+            el.innerHTML += '<div class="resize-handle se"></div>';
+            
+            el.addEventListener('click', function(e) { e.stopPropagation(); selectRecetaElement(el); });
+            canvas.appendChild(el);
+            makeRecetaDraggable(el);
+        }
+
+        function createRecetaLine(config) {
+            const canvas = document.getElementById('recetaCanvas');
+            const el = document.createElement('div');
+            el.className = 'draggable-element';
+            el.style.left = config.x + 'px';
+            el.style.top = config.y + 'px';
+            el.style.width = config.width + 'px';
+            el.style.height = config.height + 'px';
+            el.style.backgroundColor = config.color;
+            el.style.position = 'absolute';
+            el.id = 'receta-el-' + recetaElementCounter++;
+            
+            el.addEventListener('click', function(e) { e.stopPropagation(); selectRecetaElement(el); });
+            canvas.appendChild(el);
+            makeRecetaDraggable(el);
+        }
+
+        function makeRecetaDraggable(element) {
+            interact(element).draggable({
+                listeners: {
+                    move: function(event) {
+                        const target = event.target;
+                        const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+                        const y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+                        target.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
+                        target.setAttribute('data-x', x);
+                        target.setAttribute('data-y', y);
+                    }
+                }
+            });
+        }
+
+        function selectRecetaElement(el) {
+            if(recetaSelectedElement) recetaSelectedElement.classList.remove('selected');
+            recetaSelectedElement = el;
+            el.classList.add('selected');
+            document.getElementById('recetaProperties').style.display = 'block';
+            
+            if(el.contentEditable) {
+                document.getElementById('recetaFontSize').value = parseInt(el.style.fontSize) || 16;
+                document.getElementById('recetaFontSizeValue').textContent = parseInt(el.style.fontSize) || 16;
+            }
+        }
+
+        function updateRecetaElement() {
+            const title = document.getElementById('recetaTitle').value;
+            const name = document.getElementById('recetaName').value;
+            const specialty = document.getElementById('recetaSpecialty').value;
+            const phone = document.getElementById('recetaPhone').value;
+            
+            const titleEl = document.getElementById('receta-el-title');
+            const specEl = document.getElementById('receta-el-specialty');
+            const phoneEl = document.getElementById('receta-el-phone');
+            
+            if(titleEl) titleEl.innerText = title + ' ' + name;
+            if(specEl) specEl.innerText = specialty;
+            if(phoneEl) phoneEl.innerText = phone;
+        }
+
+        function updateRecetaColors() {
+            recetaPrimaryColor = document.getElementById('recetaColor').value;
+            const titleEl = document.getElementById('receta-el-title');
+            if(titleEl) titleEl.style.color = recetaPrimaryColor;
+        }
+
+        function updateRecetaStyle() {
+            if(!recetaSelectedElement) return;
+            const fontSize = document.getElementById('recetaFontSize').value;
+            const color = document.getElementById('recetaTextColor').value;
+            recetaSelectedElement.style.fontSize = fontSize + 'px';
+            recetaSelectedElement.style.color = color;
+            document.getElementById('recetaFontSizeValue').textContent = fontSize;
+        }
+
+        function deleteRecetaElement() {
+            if(!recetaSelectedElement) return;
+            recetaSelectedElement.remove();
+            recetaSelectedElement = null;
+            document.getElementById('recetaProperties').style.display = 'none';
+        }
+
+        function handleRecetaLogo(event) {
+            const file = event.target.files[0];
+            if(!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const canvas = document.getElementById('recetaCanvas');
+                const el = document.createElement('div');
+                el.className = 'draggable-element';
+                el.style.left = '50px';
+                el.style.top = '50px';
+                el.style.width = '100px';
+                el.style.position = 'absolute';
+                el.innerHTML = '<img src="' + e.target.result + '" style="width: 100%;">';
+                el.id = 'receta-logo-' + recetaElementCounter++;
+                el.addEventListener('click', function(e) { e.stopPropagation(); selectRecetaElement(el); });
+                canvas.appendChild(el);
+                makeRecetaDraggable(el);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function addRecetaElement() {
+            createRecetaText({ content: 'Nuevo Texto', x: 100, y: 100, fontSize: 16, color: '#000000', width: 200 });
+        }
+
+        function setRecetaTitle(title) {
+            document.getElementById('recetaTitle').value = title;
+            updateRecetaElement();
+        }
+
+        function calculateRecetaPrice() {
+            const prices = { simple: 9990, duplicado: 14990, triplicado: 19990 };
+            const type = document.getElementById('recetaPaper').value;
+            const qty = parseInt(document.getElementById('recetaQty').value) || 1;
+            const total = prices[type] * qty;
+            document.getElementById('recetaTotal').textContent = '$' + total.toLocaleString();
+        }
+
+        async function downloadReceta(format) {
+            const canvas = document.getElementById('recetaCanvas');
+            if(canvas.children.length === 0 || canvas.querySelector('.text-gray-400')) {
+                alert('Selecciona una plantilla primero');
+                return;
+            }
+            
+            const selected = canvas.querySelector('.selected');
+            if(selected) selected.classList.remove('selected');
+            
+            try {
+                const canvasEl = await html2canvas(canvas, { scale: 3, backgroundColor: '#ffffff' });
+                if(selected) selected.classList.add('selected');
+                
+                if(format === 'jpg') {
+                    const link = document.createElement('a');
+                    link.download = 'receta-' + Date.now() + '.jpg';
+                    link.href = canvasEl.toDataURL('image/jpeg', 0.95);
+                    link.click();
+                } else if(format === 'pdf') {
+                    const { jsPDF } = window.jspdf;
+                    const pdf = new jsPDF('p', 'mm', 'a4');
+                    const imgWidth = 210;
+                    const imgHeight = canvasEl.height * imgWidth / canvasEl.width;
+                    pdf.addImage(canvasEl.toDataURL('image/jpeg', 0.95), 'JPEG', 0, 0, imgWidth, imgHeight);
+                    pdf.save('receta-' + Date.now() + '.pdf');
+                }
+                alert('✅ ¡Descargado exitosamente!');
+            } catch(error) {
+                alert('Error al generar la imagen');
+            }
+        }
+
+        async function orderReceta() {
+            if(!recetaCurrentTemplate) { alert('Selecciona una plantilla'); return; }
+            
+            const canvas = document.getElementById('recetaCanvas');
+            if(canvas.children.length === 0) { alert('Diseña tu receta primero'); return; }
+            
+            const canvasEl = await html2canvas(canvas, { scale: 3, backgroundColor: '#ffffff' });
+            const link = document.createElement('a');
+            link.download = 'receta-' + recetaTemplates[recetaCurrentTemplate].name + '-' + Date.now() + '.jpg';
+            link.href = canvasEl.toDataURL('image/jpeg', 0.95);
+            link.click();
+            
+            const total = document.getElementById('recetaTotal').textContent;
+            const msg = ` *PEDIDO RECETA*%0A%0A🎨 ${recetaTemplates[recetaCurrentTemplate].name}%0A📄 ${document.getElementById('recetaPaper').value}%0A🔢 ${document.getElementById('recetaQty').value}%0A💰 ${total}%0A%0A📎 Imagen descargada automáticamente`;
+            
+            setTimeout(() => {
+                window.open(`https://wa.me/56978472489?text=${msg}`, '_blank');
+                alert('📥 Imagen descargada. Adjúntala en WhatsApp.');
+            }, 1000);
+        }
+
+        function resetReceta() {
+            if(confirm('¿Reiniciar diseño?')) initRecetaTemplate(recetaCurrentTemplate);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            navigateTo('home');
+        });
+    </script>
+</body>
+</html>
