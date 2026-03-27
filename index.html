@@ -45,16 +45,7 @@
         
         }
 
-        /* Upload zone styles */
-.upload-zone.dragover {
-    border-color: #3b82f6;
-    background: rgba(59, 130, 246, 0.1);
-}
-
-.file-item {
-    animation: slideIn 0.3s ease;
-}
-
+ 
 @keyframes slideIn {
     from { opacity: 0; transform: translateY(-10px); }
     to { opacity: 1; transform: translateY(0); }
@@ -1177,5 +1168,33 @@
             navigateTo('home');
         });
     </script>
+                <!-- Panel de Subida de Archivos (agregar después del panel de Logo) -->
+<div class="property-panel rounded-2xl p-4 shadow-lg">
+    <h4 class="font-bold text-gray-800 mb-3 border-b pb-2">📎 Adjuntar Archivo</h4>
+    <p class="text-xs text-gray-600 mb-3">¿Tienes un formato o diseño de referencia? Súbelo aquí.</p>
+    
+    <div class="upload-zone rounded-lg p-4 text-center cursor-pointer mb-3" 
+         id="recetaUploadZone" 
+         onclick="document.getElementById('recetaFileInput').click()" 
+         ondrop="handleRecetaFileDrop(event)" 
+         ondragover="handleRecetaDragOver(event)" 
+         ondragleave="handleRecetaDragLeave(event)">
+        <input type="file" 
+               id="recetaFileInput" 
+               class="hidden" 
+               accept=".jpg,.jpeg,.png,.gif,.pdf,.doc,.docx,.xls,.xlsx" 
+               multiple 
+               onchange="handleRecetaFiles(event)">
+        <div id="recetaUploadContent">
+            <div class="text-3xl mb-2">📁</div>
+            <p class="text-xs text-gray-600">Arrastra o haz clic para subir</p>
+            <p class="text-xs text-gray-400 mt-1">Imágenes, PDF, Word o Excel (Máx. 10MB)</p>
+            <p class="text-xs text-yellow-600 mt-2">⚠️ Se enviarán por WhatsApp</p>
+        </div>
+    </div>
+    
+    <!-- Lista de archivos seleccionados -->
+    <div id="recetaFileList" class="mt-2 space-y-2"></div>
+</div>
 </body>
 </html>
